@@ -1,0 +1,24 @@
+# Environment variables
+.env
+.env.*
+
+# Database index files (example patterns, adjust as needed)
+*.sqlite3
+*.db
+__pycache__/
+
+# Logs
+*.log
+
+# IDE and OS generated files
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Python specific
+*.pyc
+*.pyd
+.Python
+venv/
+env/
