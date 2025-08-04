@@ -1,0 +1,178 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Matrix-themed design system with green phosphor glow effects 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* Matrix black and green color palette */
+    --background: 120 100% 4%;
+    --foreground: 120 100% 75%;
+
+    --card: 120 50% 8%;
+    --card-foreground: 120 100% 75%;
+
+    --popover: 120 50% 8%;
+    --popover-foreground: 120 100% 75%;
+
+    --primary: 120 100% 50%;
+    --primary-foreground: 120 100% 4%;
+
+    --secondary: 120 30% 15%;
+    --secondary-foreground: 120 100% 75%;
+
+    --muted: 120 20% 12%;
+    --muted-foreground: 120 50% 45%;
+
+    --accent: 120 80% 35%;
+    --accent-foreground: 120 100% 95%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 120 100% 95%;
+
+    --border: 120 30% 20%;
+    --input: 120 30% 15%;
+    --ring: 120 100% 50%;
+
+    /* Matrix-specific colors */
+    --matrix-green: 120 100% 50%;
+    --matrix-green-bright: 120 100% 75%;
+    --matrix-green-dim: 120 60% 25%;
+    --matrix-black: 120 100% 4%;
+    --matrix-dark: 120 50% 8%;
+
+    /* Terminal glow effect */
+    --glow-primary: 0 0 20px hsl(120 100% 50% / 0.8);
+    --glow-secondary: 0 0 10px hsl(120 100% 50% / 0.4);
+
+    --radius: 0.25rem;
+
+    --sidebar-background: 120 50% 8%;
+    --sidebar-foreground: 120 100% 75%;
+    --sidebar-primary: 120 100% 50%;
+    --sidebar-primary-foreground: 120 100% 4%;
+    --sidebar-accent: 120 30% 15%;
+    --sidebar-accent-foreground: 120 100% 75%;
+    --sidebar-border: 120 30% 20%;
+    --sidebar-ring: 120 100% 50%;
+  }
+
+  .dark {
+    --background: 120 100% 4%;
+    --foreground: 120 100% 75%;
+    --card: 120 50% 8%;
+    --card-foreground: 120 100% 75%;
+    --popover: 120 50% 8%;
+    --popover-foreground: 120 100% 75%;
+    --primary: 120 100% 50%;
+    --primary-foreground: 120 100% 4%;
+    --secondary: 120 30% 15%;
+    --secondary-foreground: 120 100% 75%;
+    --muted: 120 20% 12%;
+    --muted-foreground: 120 50% 45%;
+    --accent: 120 80% 35%;
+    --accent-foreground: 120 100% 95%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 120 100% 95%;
+    --border: 120 30% 20%;
+    --input: 120 30% 15%;
+    --ring: 120 100% 50%;
+    --sidebar-background: 120 50% 8%;
+    --sidebar-foreground: 120 100% 75%;
+    --sidebar-primary: 120 100% 50%;
+    --sidebar-primary-foreground: 120 100% 4%;
+    --sidebar-accent: 120 30% 15%;
+    --sidebar-accent-foreground: 120 100% 75%;
+    --sidebar-border: 120 30% 20%;
+    --sidebar-ring: 120 100% 50%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-mono;
+    font-family: 'Source Code Pro', 'Courier New', monospace;
+  }
+
+  /* Matrix glow effects */
+  .matrix-glow {
+    text-shadow: var(--glow-secondary);
+    transition: all 0.3s ease;
+  }
+
+  .matrix-glow:hover {
+    text-shadow: var(--glow-primary);
+  }
+
+  .matrix-border {
+    border: 1px solid hsl(var(--primary));
+    box-shadow: 0 0 10px hsl(var(--primary) / 0.3);
+  }
+
+  .matrix-terminal {
+    background: linear-gradient(135deg, hsl(var(--background)), hsl(var(--card)));
+    border: 1px solid hsl(var(--border));
+    box-shadow: 
+      0 0 20px hsl(var(--primary) / 0.1),
+      inset 0 0 20px hsl(var(--primary) / 0.05);
+  }
+
+  /* Digital rain animation */
+  @keyframes digital-rain {
+    0% { transform: translateY(-100%); opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { transform: translateY(100vh); opacity: 0; }
+  }
+
+  .digital-rain {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+    overflow: hidden;
+  }
+
+  .rain-drop {
+    position: absolute;
+    color: hsl(var(--primary));
+    font-family: 'Source Code Pro', monospace;
+    font-size: 14px;
+    animation: digital-rain 3s linear infinite;
+    opacity: 0.7;
+  }
+
+  /* Typing indicator animation */
+  @keyframes typing {
+    0%, 60%, 100% { opacity: 0; }
+    30% { opacity: 1; }
+  }
+
+  .typing-indicator {
+    animation: typing 1.4s infinite;
+  }
+
+
+
+  /* Typewriter effect */
+  @keyframes typewriter {
+    from { width: 0; }
+    to { width: 100%; }
+  }
+
+  .typewriter-text {
+    overflow: hidden;
+    white-space: nowrap;
+    animation: typewriter 2s steps(40, end);
+  }
+}
