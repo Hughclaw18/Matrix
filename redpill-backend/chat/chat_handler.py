@@ -1,9 +1,9 @@
-from rag.rag_pipeline import RAGPipeline
+from services.nvidia_chat_service import NvidiaChatService
 
 class ChatHandler:
     def __init__(self):
-        self.rag_pipeline = RAGPipeline()
+        self.nvidia_chat_service = NvidiaChatService()
 
     async def process_message(self, message: str):
-        response = await self.rag_pipeline.run_pipeline(message)
+        response = self.nvidia_chat_service.get_chat_response(message)
         return response
