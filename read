@@ -1,0 +1,5 @@
+#backend 
+cd redpill-backend; uvicorn app.main:app --host 0.0.0.0 --port 8001 --reload 
+
+#front end
+cd redpill-interface; npm run dev

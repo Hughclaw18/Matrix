@@ -1,9 +1,9 @@
-from services.nvidia_chat_service import NvidiaChatService
+from services.google_chat_service import GoogleChatService
 
 class ChatHandler:
     def __init__(self):
-        self.nvidia_chat_service = NvidiaChatService()
+        self.google_chat_service = GoogleChatService()
 
-    async def process_message(self, message: str):
-        response = self.nvidia_chat_service.get_chat_response(message)
+    def process_message(self, context: str, question: str):
+        response = self.google_chat_service.get_chat_response(context, question)
         return response

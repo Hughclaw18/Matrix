@@ -69,7 +69,7 @@ export const ChatInterface = () => {
         });
 
         try {
-          await axios.post('http://localhost:8000/ingest', formData, {
+          await axios.post('http://localhost:8001/ingest', formData, {
             headers: {
               'Content-Type': 'multipart/form-data',
             },
@@ -83,7 +83,7 @@ export const ChatInterface = () => {
         }
       }
 
-      const response = await axios.post('http://localhost:8000/chat', {
+      const response = await axios.post('http://localhost:8001/chat', {
         message: inputText,
       });
 
