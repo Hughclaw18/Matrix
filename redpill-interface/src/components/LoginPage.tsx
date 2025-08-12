@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 
@@ -9,17 +10,18 @@ interface LoginPageProps {
 export const LoginPage = ({ onLogin }: LoginPageProps) => {
   const [selectedPill, setSelectedPill] = useState<'red' | 'blue' | null>(null);
   const [showChoice, setShowChoice] = useState(false);
+  const [showVideo, setShowVideo] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   const handlePillChoice = (pill: 'red' | 'blue') => {
     setSelectedPill(pill);
     if (pill === 'red') {
+      setShowVideo(true);
       setTimeout(() => {
-        onLogin();
-      }, 2000);
+        // onLogin will be called after video ends
+      }, 2000); // Small delay before video starts
     } else {
-      setTimeout(() => {
-        window.location.reload();
-      }, 2000);
+      setShowVideo(true);
     }
   };
 
@@ -103,6 +105,35 @@ export const LoginPage = ({ onLogin }: LoginPageProps) => {
                 </p>
               </div>
             )}
+          </div>
+        )}
+
+        {showVideo && (
+          <div className="fixed inset-0 w-screen h-screen bg-black z-50 flex items-center justify-center">
+            <video
+              ref={videoRef}
+              src={selectedPill === 'red' ? '/red_pill_video.mp4' : '/blue_pill_video.mp4'} // Assuming video is in public folder
+              autoPlay
+              controls
+              onEnded={() => {
+                if (selectedPill === 'red') {
+                  onLogin();
+                } else {
+                  window.location.reload();
+                }
+              }}
+              className="w-full h-full object-cover"
+            />
+            <Button
+              onClick={() => {
+                if (videoRef.current) {
+                  videoRef.current.currentTime += 10; // Fast forward by 10 seconds
+                }
+              }}
+              className="absolute bottom-8 right-8 bg-white text-black px-4 py-2 rounded-full"
+            >
+              Fast Forward 10s
+            </Button>
           </div>
         )}
       </Card>

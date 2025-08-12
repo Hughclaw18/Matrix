@@ -2,6 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
+.scrollbar-matrix::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scrollbar-matrix::-webkit-scrollbar-track {
+  background: rgba(0, 255, 65, 0.1);
+}
+
+.scrollbar-matrix::-webkit-scrollbar-thumb {
+  background: #00ff41;
+  border-radius: 4px;
+}
+
+.scrollbar-matrix::-webkit-scrollbar-thumb:hover {
+  background: #00cc34;
+}
+
 /* Matrix-themed design system with green phosphor glow effects 
 All colors MUST be HSL.
 */

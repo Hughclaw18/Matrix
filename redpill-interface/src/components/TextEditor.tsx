@@ -174,13 +174,7 @@ export const TextEditor = ({ content = '', onChange, readOnly = false }: TextEdi
         ref={editorRef}
         contentEditable={!readOnly}
         onInput={handleContentChange}
-        className="p-4 min-h-[200px] outline-none font-mono text-sm matrix-glow"
-        style={{ 
-          lineHeight: '1.6',
-          whiteSpace: 'pre-wrap'
-        }}
-        dangerouslySetInnerHTML={{ __html: content }}
-        suppressContentEditableWarning={true}
+        className="p-4 min-h-[200px] outline-none font-mono text-sm matrix-glow overflow-y-auto scrollbar-matrix"
       />
     </Card>
   );
