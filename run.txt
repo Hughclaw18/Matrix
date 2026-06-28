@@ -1,0 +1,67 @@
+========================================================================
+   MATRIX ORACLE NEURAL INTERFACE - COMMAND REFERENCE CHEAT SHEET
+========================================================================
+
+--- 1. SINGLE-CLICK LAUNCHERS (AUTOMATED) ---
+* Ubuntu / Linux:
+  chmod +x start_project.sh run_tests.sh
+  ./start_project.sh   # Launch workspace & browser panel
+  ./run_tests.sh       # Run entire Python Test Suite in-memory
+
+* Windows Command Prompt / PowerShell:
+  .\start_project.bat  # Launch workspace & browser panel
+  .\run_tests.bat      # Run entire Python Test Suite in-memory
+
+
+--- 2. MANUAL SERVICE STARTUP ---
+* Launch FastAPI Backend Server (Port 8001, Reload enabled):
+  cd redpill-backend
+  python3 -m uvicorn app.main:app --host 0.0.0.0 --port 8001 --reload
+  (Use 'python' instead of 'python3' on Windows)
+
+* Launch Vite React Frontend Console (Port 3000):
+  cd redpill-interface
+  npm run dev
+
+* Launch Alternative Streamlit Chatbot (Optional):
+  cd redpill-backend
+  streamlit run stapp.py
+
+
+--- 3. DEPENDENCY INSTALLATIONS & UPDATES ---
+* Install Backend Dependencies (UV Workspace member):
+  cd redpill-backend
+  uv pip install -e .
+  (Or using standard pip: pip3 install -r requirements.txt)
+
+* Install Frontend Node Modules:
+  cd redpill-interface
+  npm install
+
+
+--- 4. TESTING & VERIFICATION ---
+* Run pytest suite:
+  cd redpill-backend
+  python3 -m pytest -v tests/test_backend.py
+
+
+--- 5. PROCESS CLEANUP & PYCACHE PURGING ---
+* Purge all Python __pycache__ directories recursively:
+  - Ubuntu/Linux:
+    find . -type d -name "__pycache__" -exec rm -r {} +
+  - Windows PowerShell:
+    Get-ChildItem -Path . -Filter "__pycache__" -Recurse -Directory | Remove-Item -Force -Recurse
+
+* Purge all orphaned .pyc compiled files recursively:
+  - Ubuntu/Linux:
+    find . -type f -name "*.pyc" -delete
+  - Windows PowerShell:
+    Get-ChildItem -Path . -Filter "*.pyc" -Recurse | Remove-Item -Force
+
+* Force kill all stray Uvicorn reloaders and Pytest instances:
+  - Ubuntu/Linux:
+    pkill -f uvicorn
+    pkill -f pytest
+  - Windows PowerShell:
+    Get-CimInstance Win32_Process -Filter "Name = 'python.exe'" | Where-Object { $_.CommandLine -match "uvicorn" -or $_.CommandLine -match "pytest" } | ForEach-Object { Stop-Process -Id $_.ProcessId -Force }
+========================================================================

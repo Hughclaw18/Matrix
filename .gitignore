@@ -1,0 +1,52 @@
+# ========================================================
+#   MATRIX ORACLE NEURAL INTERFACE - GIT EXCLUSIONS
+# ========================================================
+
+# --- Python Compiled Files ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.cache/
+
+# --- Virtual Environments ---
+.venv/
+venv/
+ENV/
+env/
+
+# --- Local Databases & Data Stores ---
+# Ignore SQLite history databases
+*.db
+*.sqlite3
+
+# Ignore local Qdrant segment databases
+qdrant_db/
+
+# Ignore operator document uploads directory
+uploads/
+
+# --- Node Package Dependencies & Builds ---
+node_modules/
+dist/
+build/
+out/
+.npm
+.eslintcache
+
+# --- Environment Configurations (Private) ---
+.env
+.env.local
+.env.*.local
+
+# --- IDE & System Files ---
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp

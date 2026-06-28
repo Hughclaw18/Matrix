@@ -8,7 +8,7 @@ import streamlit as st
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from utils.common import load_environment_variables
 load_environment_variables()
-from services.google_chat_service import GoogleChatService
+from services.llm_service import LLMService
 from utils.db_manager import init_db, add_user, get_user, create_chat_session, get_chat_sessions, add_chat_message, get_chat_messages, delete_chat_session, clear_chat_messages, update_chat_session_name, update_user_profile, get_user_profile, DATABASE_NAME
 
 # --- Page Configuration ---
@@ -19,9 +19,9 @@ init_db()
 
 # --- Helper Functions ---
 @st.cache_resource
-def get_google_chat_service():
-    """Initialize and cache the GoogleChatService."""
-    return GoogleChatService()
+def get_llm_service():
+    """Initialize and cache the LLMService."""
+    return LLMService()
 
 def logout():
     """Clear session state variables to log the user out."""
@@ -74,7 +74,7 @@ def render_login_page():
 
 def render_main_app():
     """Render the main chat application UI after login."""
-    google_chat_service = get_google_chat_service()
+    llm_service = get_llm_service()
     
     # --- Sidebar for Session Management ---
     with st.sidebar:
@@ -85,6 +85,17 @@ def render_main_app():
         if st.button("User Profile"):
             st.session_state.current_view = "profile"
             st.rerun()
+
+        st.divider()
+        st.header("LLM Engine Selection")
+        provider = st.selectbox("Provider", ["Gemini", "NVIDIA", "Groq"])
+        if provider == "Gemini":
+            model_options = ["models/gemini-2.5-flash", "models/gemini-2.5-pro"]
+        elif provider == "NVIDIA":
+            model_options = ["nvidia/llama-3.1-nemotron-nano-vl-8b-v1", "meta/llama-3.1-405b-instruct", "nvidia/llama-3.1-nemotron-70b-instruct"]
+        else:
+            model_options = ["llama-3.3-70b-versatile", "llama-3.1-8b-instant", "mixtral-8x7b-32768"]
+        model_name = st.selectbox("Model", model_options)
 
         st.divider()
         st.header("Chat Sessions")
@@ -175,7 +186,7 @@ def render_main_app():
             with st.chat_message("assistant"):
                 with st.spinner("Oracle is thinking..."):
                     try:
-                        full_response = google_chat_service.get_chat_response(context="", question=query)
+                        full_response = llm_service.get_chat_response(provider, model_name, context="", question=query)
                     except Exception as e:
                         full_response = f"An error occurred: {e}"
                 

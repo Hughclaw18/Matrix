@@ -1,27 +1,62 @@
-import { useState } from 'react';
-import { useRef } from 'react';
+import { useState, useRef } from 'react';
+import axios from 'axios';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { toast } from 'sonner';
 
 interface LoginPageProps {
-  onLogin: () => void;
+  onLogin: (id: number, username: string) => void;
 }
 
 export const LoginPage = ({ onLogin }: LoginPageProps) => {
   const [selectedPill, setSelectedPill] = useState<'red' | 'blue' | null>(null);
   const [showChoice, setShowChoice] = useState(false);
   const [showVideo, setShowVideo] = useState(false);
+  const [showTerminalForm, setShowTerminalForm] = useState(false);
+  
+  // Credentials states
+  const [isSignUp, setIsSignUp] = useState(false);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const handlePillChoice = (pill: 'red' | 'blue') => {
     setSelectedPill(pill);
-    if (pill === 'red') {
-      setShowVideo(true);
-      setTimeout(() => {
-        // onLogin will be called after video ends
-      }, 2000); // Small delay before video starts
-    } else {
-      setShowVideo(true);
+    setShowVideo(true);
+  };
+
+  const handleAuthSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!username.trim() || !password.trim()) {
+      toast.error('Please enter both username and password.');
+      return;
+    }
+
+    setIsLoading(true);
+    const endpoint = isSignUp ? 'register' : 'login';
+    try {
+      const response = await axios.post(`http://localhost:8001/${endpoint}`, {
+        username,
+        password,
+      });
+
+      if (isSignUp) {
+        toast.success('Access configuration initialized. You may now login.');
+        setIsSignUp(false);
+        setPassword('');
+      } else {
+        toast.success(`Access granted. Welcome, ${response.data.username}.`);
+        onLogin(response.data.id, response.data.username);
+      }
+    } catch (error: any) {
+      console.error(error);
+      const detail = error.response?.data?.detail || 'System connection failure. Verify neural link.';
+      toast.error(detail);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -30,10 +65,70 @@ export const LoginPage = ({ onLogin }: LoginPageProps) => {
       <div className="scan-line" />
       <div className="digital-rain" />
       
-      <Card className="matrix-terminal p-8 max-w-2xl mx-4 text-center relative">
+      <Card className="matrix-terminal p-8 max-w-2xl mx-4 text-center relative w-full border-primary">
         <div className="glitch-effect"></div>
         
-        {!showChoice ? (
+        {showTerminalForm ? (
+          <div className="space-y-6 text-left">
+            <div className="text-center mb-6">
+              <h1 className="text-2xl font-bold font-mono text-primary matrix-glow">
+                {isSignUp ? 'INITIALIZE NEW NEURAL CONFIG' : 'NEURAL LOG IN SEQUENCE'}
+              </h1>
+              <p className="text-xs text-muted-foreground font-mono mt-1">
+                SECURE TRILOGY CONTEXT DECRYPTER v4.0
+              </p>
+            </div>
+
+            <form onSubmit={handleAuthSubmit} className="space-y-4">
+              <div className="space-y-1">
+                <label className="text-xs font-mono text-primary">ACCESS IDENTITY (USERNAME)</label>
+                <Input
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="e.g. Neo / Trinity"
+                  className="font-mono matrix-border bg-black border-primary text-primary"
+                  disabled={isLoading}
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-xs font-mono text-primary">SECURE PASSCODE (PASSWORD)</label>
+                <Input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="********"
+                  className="font-mono matrix-border bg-black border-primary text-primary"
+                  disabled={isLoading}
+                />
+              </div>
+
+              <div className="pt-2 flex flex-col gap-2">
+                <Button
+                  type="submit"
+                  disabled={isLoading}
+                  className="matrix-border bg-primary hover:bg-primary/80 text-black font-mono w-full"
+                >
+                  {isLoading ? 'EXECUTING...' : isSignUp ? 'CREATE CONFIGURATION' : 'DECRYPT ACCESS'}
+                </Button>
+
+                <Button
+                  type="button"
+                  variant="ghost"
+                  onClick={() => {
+                    setIsSignUp(!isSignUp);
+                    setUsername('');
+                    setPassword('');
+                  }}
+                  className="text-xs font-mono text-muted-foreground hover:text-primary hover:bg-transparent"
+                  disabled={isLoading}
+                >
+                  {isSignUp ? 'Already registered? Login to link' : 'New operator? Initialize interface config'}
+                </Button>
+              </div>
+            </form>
+          </div>
+        ) : !showChoice ? (
           <div className="space-y-6">
             <div className="matrix-glow">
               <h1 className="text-4xl font-bold font-mono text-primary mb-4">
@@ -51,7 +146,7 @@ export const LoginPage = ({ onLogin }: LoginPageProps) => {
             
             <Button
               onClick={() => setShowChoice(true)}
-              className="matrix-border bg-primary hover:bg-primary/80 text-primary-foreground font-mono"
+              className="matrix-border bg-primary hover:bg-primary/80 text-black font-mono"
             >
               Enter the Matrix
             </Button>
@@ -76,7 +171,7 @@ export const LoginPage = ({ onLogin }: LoginPageProps) => {
               <div className="text-center">
                 <Button
                   onClick={() => handlePillChoice('blue')}
-                  className="w-20 h-20 rounded-full bg-blue-600 hover:bg-blue-500 text-white shadow-[0_0_20px_#3b82f6] hover:shadow-[0_0_30px_#3b82f6] transition-all duration-300"
+                  className="w-20 h-20 rounded-full bg-blue-600 hover:bg-blue-500 text-white shadow-[0_0_20px_#3b82f6] hover:shadow-[0_0_30px_#3b82f6] transition-all duration-300 flex items-center justify-center"
                   disabled={selectedPill !== null}
                 >
                   <div className="w-12 h-12 bg-blue-500 rounded-full shadow-inner"></div>
@@ -87,7 +182,7 @@ export const LoginPage = ({ onLogin }: LoginPageProps) => {
               <div className="text-center">
                 <Button
                   onClick={() => handlePillChoice('red')}
-                  className="w-20 h-20 rounded-full bg-red-600 hover:bg-red-500 text-white shadow-[0_0_20px_#ef4444] hover:shadow-[0_0_30px_#ef4444] transition-all duration-300"
+                  className="w-20 h-20 rounded-full bg-red-600 hover:bg-red-500 text-white shadow-[0_0_20px_#ef4444] hover:shadow-[0_0_30px_#ef4444] transition-all duration-300 flex items-center justify-center"
                   disabled={selectedPill !== null}
                 >
                   <div className="w-12 h-12 bg-red-500 rounded-full shadow-inner"></div>
@@ -112,12 +207,13 @@ export const LoginPage = ({ onLogin }: LoginPageProps) => {
           <div className="fixed inset-0 w-screen h-screen bg-black z-50 flex items-center justify-center">
             <video
               ref={videoRef}
-              src={selectedPill === 'red' ? '/red_pill_video.mp4' : '/blue_pill_video.mp4'} // Assuming video is in public folder
+              src={selectedPill === 'red' ? '/red_pill_video.mp4' : '/blue_pill_video.mp4'}
               autoPlay
               controls
               onEnded={() => {
+                setShowVideo(false);
                 if (selectedPill === 'red') {
-                  onLogin();
+                  setShowTerminalForm(true);
                 } else {
                   window.location.reload();
                 }
@@ -126,13 +222,16 @@ export const LoginPage = ({ onLogin }: LoginPageProps) => {
             />
             <Button
               onClick={() => {
-                if (videoRef.current) {
-                  videoRef.current.currentTime += 10; // Fast forward by 10 seconds
+                setShowVideo(false);
+                if (selectedPill === 'red') {
+                  setShowTerminalForm(true);
+                } else {
+                  window.location.reload();
                 }
               }}
               className="absolute bottom-8 right-8 bg-white text-black px-4 py-2 rounded-full"
             >
-              Fast Forward 10s
+              Skip Video
             </Button>
           </div>
         )}

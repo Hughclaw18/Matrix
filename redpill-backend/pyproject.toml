@@ -1,0 +1,26 @@
+[project]
+name = "redpill-backend"
+version = "0.1.0"
+description = "Matrix Oracle Interface Backend"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.110.0",
+    "uvicorn>=0.28.0",
+    "python-dotenv>=1.0.1",
+    "google-genai>=2.0.0",
+    "pydantic>=2.6.0",
+    "langchain>=0.1.0",
+    "pypdf>=4.0.0",
+    "python-docx>=1.1.0",
+    "python-multipart>=0.0.9",
+    "pyjwt>=2.8.0",
+    "bcrypt>=4.1.0",
+    "streamlit>=1.31.0",
+    "redis>=5.0.0",
+    "qdrant-client>=1.12.0",
+    "pytest>=8.0.0",
+    "psycopg2-binary>=2.9.0"
+]
+
+[tool.pytest.ini_options]
+norecursedirs = ["qdrant_db", "uploads", ".venv", ".git", ".pytest_cache"]
